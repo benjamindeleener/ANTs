@@ -51,6 +51,8 @@
 
 #include "antsUtilitiesTesting.h"
 
+#include "ANTSLandmarksBSplineTransform.h"
+
 #include "ANTSUseDeformationFieldToGetAffineTransform.h"
 
 #include "ANTSUseLandmarkImagesToGetAffineTransform.h"

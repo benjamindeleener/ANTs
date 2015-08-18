@@ -75,6 +75,7 @@ set(MORE_ANTS_APPS
     ANTSJacobian
     PrintHeader
     ResetDirection
+    ANTSLandmarksBSplineTransform
     ANTSUseLandmarkImagesToGetAffineTransform
     ANTSUseLandmarkImagesToGetBSplineDisplacementField
     ANTSUseDeformationFieldToGetAffineTransform
