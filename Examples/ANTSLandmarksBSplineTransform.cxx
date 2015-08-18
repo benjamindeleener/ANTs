@@ -394,7 +394,7 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
 	bspliner->SetPointWeights(weights);
 	bspliner->Update();
     
-    cout << bspliner << endl;
+    //cout << bspliner << endl;
 
 	typedef itk::VectorLinearInterpolateImageFunction<DisplacementFieldType, RealType> InterpolatorType;
 	typename InterpolatorType::Pointer interpolator = InterpolatorType::New();
@@ -469,29 +469,7 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
 		++mIt;
 	}
     mse /= (double)movingPts->GetNumberOfPoints();
-    cout << "MSE = " << mse << " mm" << endl;
-    
-    /*TransformType::Pointer inverse_transform;
-    transform->GetInverse(inverse_transform);
-    
-    typedef itk::DisplacementFieldFromMultiTransformFilter<DisplacementFieldType, DisplacementFieldType, TransformType> WarperType;
-    typename WarperType::Pointer warper = WarperType::New();
-    warper->PushBackDisplacementFieldTransform(bspliner->GetOutput());
-    warper->PushBackAffineTransform(inverse_transform);
-    warper->SetOutputParametersFromImage(fixedImage);
-    warper->DetermineFirstDeformNoInterp(); // no clue
-    warper->Update();
-    
-#if (ITK_VERSION_MAJOR == 4 && ITK_VERSION_MINOR >= 5) || ITK_VERSION_MAJOR > 4
-    itk::TransformFileWriterTemplate<float>::Pointer writerT =
-    itk::TransformFileWriterTemplate<float>::New();
-#else
-    itk::TransformFileWriter::Pointer writerT = itk::TransformFileWriter::New();
-#endif
-    
-    writerT->SetInput(transform);
-    writerT->SetFileName("transform.txt");
-    writerT->Update();*/
+    std::cout << "MSE = " << mse << " mm" << std::endl;
     
 #if (ITK_VERSION_MAJOR == 4 && ITK_VERSION_MINOR >= 5) || ITK_VERSION_MAJOR > 4
     itk::TransformFileWriterTemplate<float>::Pointer writerTi =
