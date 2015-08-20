@@ -19,6 +19,7 @@
 #include "itkPointSetToPointSetRegistrationMethod.h"
 #include "itkDisplacementFieldFromMultiTransformFilter.h"
 #include "itkTransformFileWriter.h"
+#include <itkInverseDisplacementFieldImageFilter.h>
 
 #include <string>
 #include <vector>
@@ -338,11 +339,13 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
 
 	typename WeightsContainerType::Pointer weights = WeightsContainerType::New();
 	weights->Initialize();
+    const typename WeightsContainerType::Element boundaryWeight = 1.0e10;
 	const typename WeightsContainerType::Element weight = 1.0;
 
 	typename DisplacementFieldPointSetType::Pointer fieldPoints = DisplacementFieldPointSetType::New();
 	fieldPoints->Initialize();
 
+    unsigned long count = 0;
     for (int k=0; k<movingLandmarks_reg->GetNumberOfPoints(); k++)
     {
         VectorType vector;
@@ -357,7 +360,49 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
         fieldPoints->SetPoint(k, fieldPoint);
         fieldPoints->SetPointData(k, vector);
         weights->InsertElement(k, weight);
+        count++;
 	}
+    
+    bool enforceStationaryBoundary = true;
+    if( argc > 10 )
+    {
+        enforceStationaryBoundary = static_cast<bool>( atoi( argv[10] ) );
+    }
+    if( enforceStationaryBoundary )
+    {
+        typename LabelImageType::IndexType startIndex2 = fixedImage->GetLargestPossibleRegion().GetIndex();
+        
+        typename LabelImageType::SizeType inputSize2 = fixedImage->GetLargestPossibleRegion().GetSize();
+        for( ItF.GoToBegin(); !ItF.IsAtEnd(); ++ItF )
+        {
+            typename LabelImageType::IndexType index = ItF.GetIndex();
+            
+            bool isOnStationaryBoundary = false;
+            for( unsigned int d = 0; d < ImageDimension; d++ )
+            {
+                if( index[d] == startIndex2[d] || index[d] == startIndex2[d] + static_cast<int>( inputSize2[d] ) - 1 )
+                {
+                    isOnStationaryBoundary = true;
+                    break;
+                }
+            }
+            
+            if( isOnStationaryBoundary )
+            {
+                VectorType vector;
+                
+                vector.Fill( 0.0 );
+                
+                typename PointSetType::PointType fixedPoint;
+                parametricInputImage->TransformIndexToPhysicalPoint( index, fixedPoint );
+                
+                fieldPoints->SetPoint( count, fixedPoint );
+                fieldPoints->SetPointData( count, vector );
+                weights->InsertElement( count, boundaryWeight );
+                count++;
+            }
+        }
+    }
 
 	typename BSplineFilterType::Pointer bspliner = BSplineFilterType::New();
 
