@@ -134,7 +134,13 @@ void GetRealValuePointSetFromFile(typename itk::PointSet<float, ImageDimension>:
 
 template<unsigned int ImageDimension>
 int LandmarksBSplineTransform(int argc, char *argv[]) {
-	typedef float RealType;
+    bool verbose = false;
+    if( argc > 11 )
+    {
+        verbose = true;
+    }
+    
+	typedef double RealType;
 	typedef unsigned int LabelType;
 	typedef itk::Image<LabelType, ImageDimension> LabelImageType;
 	typedef itk::Image<RealType, ImageDimension> ReadImageType;
