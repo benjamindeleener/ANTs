@@ -301,9 +301,9 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
     optimizer->SetUseCostFunctionGradient(false);
     
     unsigned long   numberOfIterations =  20000;
-    double          gradientTolerance  =  1e-12;   // convergence criterion
-    double          valueTolerance     =  1e-12;   // convergence criterion
-    double          epsilonFunction    =  1e-6;   // convergence criterion
+    double          gradientTolerance  =  1e-8;   // convergence criterion
+    double          valueTolerance     =  1e-8;   // convergence criterion
+    double          epsilonFunction    =  1e-4;   // convergence criterion
     
     // Registration Method
     typedef itk::PointSetToPointSetRegistrationMethod<RealPhysicalPointSetType, RealPhysicalPointSetType > RegistrationType;
@@ -331,6 +331,9 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
         std::cout << e << std::endl;
         return EXIT_FAILURE;
     }
+    
+    if (verbose)
+        cout << transform << endl;
     
     typename RealPhysicalPointSetType::Pointer movingLandmarks_reg = RealPhysicalPointSetType::New();
     for (int i=0; i<movingLandmarks_set->GetNumberOfPoints(); i++)
@@ -368,8 +371,8 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
         fieldPoints->SetPoint(k, fieldPoint);
         fieldPoints->SetPointData(k, vector);
         weights->InsertElement(k, weight);
-        if (verbose)
-            cout << vector << endl;
+        //if (verbose)
+        //    cout << vector << endl;
         count++;
 	}
     
