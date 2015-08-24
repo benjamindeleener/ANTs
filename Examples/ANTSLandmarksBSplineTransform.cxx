@@ -334,7 +334,6 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
     transform->SetIdentity();
     transform->SetTranslation(translation);
     registration->SetInitialTransformParameters( transform->GetParameters() );
-    cout << transform << endl;
     
     registration->SetMetric(        metric        );
     registration->SetOptimizer(     optimizer     );
