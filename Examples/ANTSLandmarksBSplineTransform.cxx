@@ -353,7 +353,7 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
 	fieldPoints->Initialize();
 
     unsigned long count = 0;
-    for (int k=0; k<movingLandmarks_reg->GetNumberOfPoints(); k++)
+    for (int k=0; k<fixedLandmarks_set->GetNumberOfPoints(); k++)
     {
         VectorType vector;
         itk::ContinuousIndex<double, ImageDimension> fixedCidx;
