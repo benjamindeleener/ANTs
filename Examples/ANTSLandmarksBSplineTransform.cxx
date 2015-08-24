@@ -252,6 +252,8 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
     realMovingPts->Initialize();
     
     double translation_x = 0.0, translation_y = 0.0, translation_z = 0.0;
+    fixedImage->Print(cout);
+    movingImage->Print(cout);
     
     while (mItD != movingPts->GetPointData()->End()) {
         fIt = fixedPts->GetPoints()->Begin();
@@ -280,7 +282,8 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
                 fixedLandmarks->push_back( fixedPhysicalPoint );
                 movingLandmarks->push_back( movingPhysicalPoint );
                 
-                cout << fixedPhysicalPoint << " " << movingPhysicalPoint << endl;
+                if (verbose)
+                    cout << fixedPhysicalPoint << " " << movingPhysicalPoint << endl;
                 translation_x += abs(fixedPhysicalPoint[0] - movingPhysicalPoint[0]);
                 translation_y += abs(fixedPhysicalPoint[1] - movingPhysicalPoint[1]);
                 translation_z += abs(fixedPhysicalPoint[2] - movingPhysicalPoint[2]);
