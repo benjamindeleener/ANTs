@@ -131,7 +131,6 @@ void GetRealValuePointSetFromFile(typename itk::PointSet<double, ImageDimension>
             cout << count << " " << pC << " " << pS << endl;
         count++;
 	}
-    cout << "N= " << count << endl;
 	return;
 
 }
@@ -281,6 +280,7 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
                 fixedLandmarks->push_back( fixedPhysicalPoint );
                 movingLandmarks->push_back( movingPhysicalPoint );
                 
+                cout << fixedPhysicalPoint << " " << movingPhysicalPoint << endl;
                 translation_x += abs(fixedPhysicalPoint[0] - movingPhysicalPoint[0]);
                 translation_y += abs(fixedPhysicalPoint[1] - movingPhysicalPoint[1]);
                 translation_z += abs(fixedPhysicalPoint[2] - movingPhysicalPoint[2]);
