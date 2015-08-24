@@ -35,12 +35,12 @@ using namespace std;
 namespace ants {
     
 
-std::vector<float> ReadLabelValueFromFile(std::string filename) {
+std::vector<double> ReadLabelValueFromFile(std::string filename) {
 	std::ifstream file(filename.c_str());
 	string line;
 	char* token;
-	std::vector<float> result;
-	std::vector<float>::iterator it;
+	std::vector<double> result;
+	std::vector<double>::iterator it;
 
 	it = result.begin();
 	if (file.is_open())
@@ -68,12 +68,12 @@ std::vector<float> ReadLabelValueFromFile(std::string filename) {
 }
 
 template<unsigned int ImageDimension>
-void GetRealValuePointSetFromFile(typename itk::PointSet<float, ImageDimension>::Pointer &curved,typename itk::PointSet<float, ImageDimension>::Pointer &straight,string curvedFilename, string straightFilename) {
+void GetRealValuePointSetFromFile(typename itk::PointSet<double, ImageDimension>::Pointer &curved,typename itk::PointSet<double, ImageDimension>::Pointer &straight,string curvedFilename, string straightFilename) {
 	//define variables needed for this function
 	string line;
 	string token;
-	std::vector<float> straightValues;
-	std::vector<float> curvedValues;
+	std::vector<double> straightValues;
+	std::vector<double> curvedValues;
 
 	//fetching coordinates from files
 	try {
@@ -105,11 +105,11 @@ void GetRealValuePointSetFromFile(typename itk::PointSet<float, ImageDimension>:
 	}
 
 	//Produce the Straight points
-	typedef float Realtype;
+	typedef double Realtype;
 	typedef itk::PointSet<Realtype, ImageDimension> PointsFromText;
 
-	std::vector<float>::iterator itS = straightValues.begin();
-	std::vector<float>::iterator itC = curvedValues.begin();
+	std::vector<double>::iterator itS = straightValues.begin();
+	std::vector<double>::iterator itC = curvedValues.begin();
 	unsigned int pointId = 0;
 
 	while (itS != straightValues.end()) {
@@ -198,7 +198,7 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
 			movingImage->GetLargestPossibleRegion());
 
 
-	std::vector<float> labelWeights;
+	std::vector<double> labelWeights;
 	std::vector<LabelType> userLabels;
 
 	//initialize points container
@@ -523,8 +523,8 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
     std::cout << "MSE = " << mse << " mm" << std::endl;
     
 #if (ITK_VERSION_MAJOR == 4 && ITK_VERSION_MINOR >= 5) || ITK_VERSION_MAJOR > 4
-    itk::TransformFileWriterTemplate<float>::Pointer writerTi =
-    itk::TransformFileWriterTemplate<float>::New();
+    itk::TransformFileWriterTemplate<double>::Pointer writerTi =
+    itk::TransformFileWriterTemplate<double>::New();
 #else
     itk::TransformFileWriter::Pointer writerTi = itk::TransformFileWriter::New();
 #endif
