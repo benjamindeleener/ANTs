@@ -112,7 +112,6 @@ void GetRealValuePointSetFromFile(typename itk::PointSet<double, ImageDimension>
 	std::vector<double>::iterator itC = curvedValues.begin();
 	unsigned int pointId = 0;
 
-    int count = 0;
 	while (itS != straightValues.end()) {
 		typename PointsFromText::PointType pC;
 		typename PointsFromText::PointType pS;
@@ -126,10 +125,10 @@ void GetRealValuePointSetFromFile(typename itk::PointSet<double, ImageDimension>
 		curved->SetPoint(pointId, pC);
 		curved->SetPointData(pointId, pointId);
 		straight->SetPoint(pointId, pS);
-		straight->SetPointData(pointId, pointId++);
+		straight->SetPointData(pointId, pointId);
         if (verbose)
-            cout << count << " " << pC << " " << pS << endl;
-        count++;
+            cout << pointId << " " << pC << " " << pS << endl;
+        pointId++;
 	}
 	return;
 
@@ -252,8 +251,6 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
     realMovingPts->Initialize();
     
     double translation_x = 0.0, translation_y = 0.0, translation_z = 0.0;
-    fixedImage->Print(cout);
-    movingImage->Print(cout);
     
     while (mItD != movingPts->GetPointData()->End()) {
         fIt = fixedPts->GetPoints()->Begin();
