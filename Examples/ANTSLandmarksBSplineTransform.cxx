@@ -112,6 +112,7 @@ void GetRealValuePointSetFromFile(typename itk::PointSet<double, ImageDimension>
 	std::vector<double>::iterator itC = curvedValues.begin();
 	unsigned int pointId = 0;
 
+    int count = 0;
 	while (itS != straightValues.end()) {
 		typename PointsFromText::PointType pC;
 		typename PointsFromText::PointType pS;
@@ -127,7 +128,8 @@ void GetRealValuePointSetFromFile(typename itk::PointSet<double, ImageDimension>
 		straight->SetPoint(pointId, pS);
 		straight->SetPointData(pointId, pointId++);
         if (verbose)
-            cout << pC << " " << pS << endl;
+            cout << count << " " << pC << " " << pS << endl;
+        count++;
 	}
 	return;
 
