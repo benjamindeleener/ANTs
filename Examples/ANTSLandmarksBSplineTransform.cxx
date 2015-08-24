@@ -249,6 +249,8 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
     realFixedPts->Initialize();
     realMovingPts->Initialize();
     
+    double translation_x = 0.0, translation_y = 0.0, translation_z = 0.0;
+    
     while (mItD != movingPts->GetPointData()->End()) {
         fIt = fixedPts->GetPoints()->Begin();
         fItD = fixedPts->GetPointData()->Begin();
@@ -276,6 +278,10 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
                 fixedLandmarks->push_back( fixedPhysicalPoint );
                 movingLandmarks->push_back( movingPhysicalPoint );
                 
+                translation_x += abs(fixedPhysicalPoint[0] - movingPhysicalPoint[0]);
+                translation_y += abs(fixedPhysicalPoint[1] - movingPhysicalPoint[1]);
+                translation_z += abs(fixedPhysicalPoint[2] - movingPhysicalPoint[2]);
+                
                 break;
             }
             ++fItD;
@@ -291,8 +297,17 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
     fixedLandmarks_set->SetPoints(fixedLandmarks);
     movingLandmarks_set->SetPoints(movingLandmarks);
     
+    double numberOfPoints = fixedLandmarks_set->GetNumberOfPoints();
+    translation_x /= numberOfPoints;
+    translation_y /= numberOfPoints;
+    translation_z /= numberOfPoints;
+    
     typedef itk::CenteredEuler3DTransform< double > TransformType;
     TransformType::Pointer transform = TransformType::New();
+    TransformType::OutputVectorType translation;
+    translation[0] = translation_x;
+    translation[1] = translation_y;
+    translation[2] = translation_z;
     
     typedef itk::EuclideanDistancePointMetric<RealPhysicalPointSetType, RealPhysicalPointSetType> MetricType;
     typename MetricType::Pointer  metric = MetricType::New();
@@ -314,7 +329,9 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
     optimizer->SetEpsilonFunction( epsilonFunction );
 
     transform->SetIdentity();
+    transform->SetTranslation(translation);
     registration->SetInitialTransformParameters( transform->GetParameters() );
+    cout << transform << endl;
     
     registration->SetMetric(        metric        );
     registration->SetOptimizer(     optimizer     );
