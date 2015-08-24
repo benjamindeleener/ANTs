@@ -127,7 +127,8 @@ void GetRealValuePointSetFromFile(typename itk::PointSet<double, ImageDimension>
 		straight->SetPoint(pointId, pS);
 		straight->SetPointData(pointId, pointId++);
 	}
-	//printf("RETURNING POINT VALUES");
+    cout << curved << endl;
+    cout << straight << endl;
 	return;
 
 }
