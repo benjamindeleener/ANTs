@@ -68,7 +68,7 @@ std::vector<double> ReadLabelValueFromFile(std::string filename) {
 }
 
 template<unsigned int ImageDimension>
-void GetRealValuePointSetFromFile(typename itk::PointSet<double, ImageDimension>::Pointer &curved,typename itk::PointSet<double, ImageDimension>::Pointer &straight,string curvedFilename, string straightFilename) {
+void GetRealValuePointSetFromFile(typename itk::PointSet<double, ImageDimension>::Pointer &curved,typename itk::PointSet<double, ImageDimension>::Pointer &straight,string curvedFilename, string straightFilename, bool verbose) {
 	//define variables needed for this function
 	string line;
 	string token;
@@ -126,10 +126,9 @@ void GetRealValuePointSetFromFile(typename itk::PointSet<double, ImageDimension>
 		curved->SetPointData(pointId, pointId);
 		straight->SetPoint(pointId, pS);
 		straight->SetPointData(pointId, pointId++);
-        cout << pC << " " << pS << endl;
+        if (verbose)
+            cout << pC << " " << pS << endl;
 	}
-    cout << curved << endl;
-    cout << straight << endl;
 	return;
 
 }
@@ -218,7 +217,7 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
 				string straightFilename = argv[8];
 				string curvedFilename = argv[7];
 				GetRealValuePointSetFromFile<3>(movingPts, fixedPts,
-						curvedFilename, straightFilename);
+						curvedFilename, straightFilename, verbose);
 			} catch (exception &e) {
 				throw;
 			}
@@ -359,8 +358,9 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
         VectorType vector;
         itk::ContinuousIndex<double, ImageDimension> fixedCidx;
         typename DisplacementFieldType::PointType fieldPoint;
-        for (unsigned int i = 0; i < ImageDimension; i++)
+        for (unsigned int i = 0; i < ImageDimension; i++) {
             vector[i] = movingLandmarks_reg->GetPoint(k)[i] - fixedLandmarks_set->GetPoint(k)[i];
+        }
         
         fixedImage->TransformPhysicalPointToContinuousIndex( fixedLandmarks_set->GetPoint(k), fixedCidx );
         parametricInputImage->TransformContinuousIndexToPhysicalPoint(fixedCidx, fieldPoint);
@@ -368,6 +368,8 @@ int LandmarksBSplineTransform(int argc, char *argv[]) {
         fieldPoints->SetPoint(k, fieldPoint);
         fieldPoints->SetPointData(k, vector);
         weights->InsertElement(k, weight);
+        if (verbose)
+            cout << vector << endl;
         count++;
 	}
     
