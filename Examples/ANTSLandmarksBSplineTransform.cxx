@@ -131,6 +131,7 @@ void GetRealValuePointSetFromFile(typename itk::PointSet<double, ImageDimension>
             cout << count << " " << pC << " " << pS << endl;
         count++;
 	}
+    cout << "N= " << count << endl;
 	return;
 
 }
